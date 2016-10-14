@@ -22,9 +22,9 @@ import (
 	"github.com/centurylinkcloud/clc-go-cli/models/ips"
 	"github.com/centurylinkcloud/clc-go-cli/models/network"
 	"github.com/centurylinkcloud/clc-go-cli/models/ospatch"
+	"github.com/centurylinkcloud/clc-go-cli/models/runner"
 	"github.com/centurylinkcloud/clc-go-cli/models/server"
 	"github.com/centurylinkcloud/clc-go-cli/models/vpn"
-	"github.com/centurylinkcloud/clc-go-cli/models/webhook"
 )
 
 var AllCommands []base.Command = make([]base.Command, 0)
@@ -2436,6 +2436,13 @@ func init() {
 			AccountAgnostic: true,
 		},
 	}))
+	registerCustomCommand(commands.NewVersion(commands.CommandExcInfo{
+		Resource: "version",
+		Help: help.Command{
+			Brief:           []string{"Shows version information about the cli."},
+			AccountAgnostic: true,
+		},
+	}))
 	registerCustomCommand(commands.NewLogin(commands.CommandExcInfo{
 		Resource: "login",
 		Help: help.Command{
@@ -3738,87 +3745,21 @@ func init() {
 			},
 		},
 	})
-	registerCommandBase(nil, &webhook.ListRes{}, commands.CommandExcInfo{
+	registerCommandBase(&runner.ListReq{}, &runner.ListRes{}, commands.CommandExcInfo{
 		Verb:     "GET",
-		Url:      "https://api.ctl.io/v2/webhooks/{accountAlias}",
-		Resource: "webhook",
+		Url:      "https://api.runner.ctl.io/jobs/{accountAlias}?page={Page}&size={PageSize}",
+		Resource: "runner",
 		Command:  "list",
 		Help: help.Command{
-			Brief: []string{"Gets a list of the webhooks configured for a given account."},
-		},
-	})
-	registerCommandBase(&webhook.DeleteReq{}, new(string), commands.CommandExcInfo{
-		Verb:     "DELETE",
-		Url:      "https://api.ctl.io/v2/webhooks/{accountAlias}/{Event}/configuration",
-		Resource: "webhook",
-		Command:  "delete",
-		Help: help.Command{
-			Brief: []string{"Deletes a given alert policy by ID."},
+			Brief: []string{"Deletes a Site to Site VPN for a given account."},
 			Arguments: []help.Argument{
 				{
-					"--event",
-					[]string{"Required. Name of the event for which the webhook will be deleted."},
-				},
-			},
-		},
-	})
-	registerCommandBase(&webhook.DeleteTargetURIReq{}, new(string), commands.CommandExcInfo{
-		Verb:     "DELETE",
-		Url:      "https://api.ctl.io/v2/webhooks/{accountAlias}/{Event}/configuration/targetUris?targetUri={TargetUri}",
-		Resource: "webhook",
-		Command:  "delete-targeturi",
-		Help: help.Command{
-			Brief: []string{"Deletes a target URI from a webhook."},
-			Arguments: []help.Argument{
-				{
-					"--event",
-					[]string{"Required. Name of the event for which the target URI will be deleted."},
+					"--page",
+					[]string{"The page number to return."},
 				},
 				{
-					"--target-uri",
-					[]string{"The URI of the target to remove from the webhook."},
-				},
-			},
-		},
-	})
-	registerCommandBase(&webhook.AddTargetURIReq{}, new(string), commands.CommandExcInfo{
-		Verb:     "POST",
-		Url:      "https://api.ctl.io/v2/webhooks/{accountAlias}/{Event}/configuration/targetUris",
-		Resource: "webhook",
-		Command:  "add-targeturi",
-		Help: help.Command{
-			Brief: []string{"Add a target uri to the webhook for a specified event."},
-			Arguments: []help.Argument{
-				{
-					"--event",
-					[]string{"Required. Name of the event for which the target URI will be added."},
-				},
-				{
-					"--target-uri",
-					[]string{"Required. A uri that will be called when the event occurs."},
-				},
-			},
-		},
-	})
-	registerCommandBase(&webhook.UpdateReq{}, new(string), commands.CommandExcInfo{
-		Verb:     "PUT",
-		Url:      "https://api.ctl.io/v2/webhooks/{accountAlias}/{Event}/configuration",
-		Resource: "webhook",
-		Command:  "update",
-		Help: help.Command{
-			Brief: []string{"Change the configuration of a webhook for a specific event."},
-			Arguments: []help.Argument{
-				{
-					"--event",
-					[]string{"Required. Name of the event for which to update the webhook."},
-				},
-				{
-					"--recursive",
-					[]string{"Required. If true, the webhook is called when the event occurs in sub-accounts."},
-				},
-				{
-					"--target-uri",
-					[]string{"A uri that will be called when the event occurs."},
+					"--page-size",
+					[]string{"The number of items per page."},
 				},
 			},
 		},
