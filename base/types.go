@@ -37,3 +37,36 @@ func (t *Time) MarshalJSON() ([]byte, error) {
 }
 
 type BinaryResponse string
+
+type UnixTimeStamp string
+
+func (u *UnixTimeStamp) UnmarshalJSON(b []byte) error {
+	n := int64(0)
+	err := json.Unmarshal(b, &n)
+	if err != nil {
+		return err
+	}
+
+	ut := time.Unix(n, 0)
+	*u = UnixTimeStamp(ut.String())
+
+	return nil
+}
+
+type JSTimeStamp string
+
+func (u *JSTimeStamp) UnmarshalJSON(b []byte) error {
+	n := int64(0)
+	err := json.Unmarshal(b, &n)
+	if err != nil {
+		return err
+	}
+
+	//Javascript timestamp is in milliseconds so convert to seconds
+	n = n / 1000
+
+	ut := time.Unix(n, 0)
+	*u = JSTimeStamp(ut.String())
+
+	return nil
+}

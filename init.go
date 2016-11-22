@@ -25,6 +25,7 @@ import (
 	"github.com/centurylinkcloud/clc-go-cli/models/server"
 	"github.com/centurylinkcloud/clc-go-cli/models/vpn"
 	"github.com/centurylinkcloud/clc-go-cli/models/webhook"
+	"github.com/centurylinkcloud/clc-go-cli/models/lbaas"
 )
 
 var AllCommands []base.Command = make([]base.Command, 0)
@@ -3831,6 +3832,76 @@ func init() {
 					[]string{"A uri that will be called when the event occurs."},
 				},
 			},
+		},
+	})
+	registerCommandBase(&lbaas.CreateReq{}, &lbaas.LoadBalancerRequest{}, commands.CommandExcInfo{
+		Verb:     "POST",
+		Url:      "https://api.loadbalancer.ctl.io/{accountAlias}/{DataCenter}/loadbalancers",
+		Resource: "lbaas",
+		Command:  "create",
+		Help: help.Command{
+			Brief: []string{"Create the LBaaS framework and get a VIP assigned."},
+			Arguments: []help.Argument{
+				{
+					"--data-center",
+					[]string{"Required. Short string representing the data center you want the new load balancer in."},
+				},
+								{
+					"--name",
+					[]string{"Required. Friendly name for the new LBaaS framework."},
+				},
+				{
+					"--description",
+					[]string{"Required. Description for new the new LBaaS framework."},
+				},
+			},
+		},
+	})
+	registerCommandBase(&lbaas.StatusReq{}, &lbaas.LoadBalancerRequest{}, commands.CommandExcInfo{
+		Verb:     "GET",
+		Url:      "https://api.loadbalancer.ctl.io/{accountAlias}/{DataCenter}/loadbalancers/requests/{RequestId}",
+		Resource: "lbaas",
+		Command:  "requeststatus",
+		Help: help.Command{
+			Brief: []string{"Get the status of a LBaaS request."},
+			Arguments: []help.Argument{
+				{
+					"--data-center",
+					[]string{"Required. Short string representing the data center you want the new load balancer in."},
+				},
+								{
+					"--request-id",
+					[]string{"Required. The ID of the request to get the status for."},
+				},
+			},
+		},
+	})
+	registerCommandBase(&lbaas.GetReq{}, &lbaas.LoadBalancer{}, commands.CommandExcInfo{
+		Verb:     "GET",
+		Url:      "https://api.loadbalancer.ctl.io/{accountAlias}/{DataCenter}/loadbalancers/{LoadBalancerId}",
+		Resource: "lbaas",
+		Command:  "get",
+		Help: help.Command{
+			Brief: []string{"Get the details of a LBaaS."},
+			Arguments: []help.Argument{
+				{
+					"--data-center",
+					[]string{"Required. Short string representing the data center you want the new load balancer in."},
+				},
+								{
+					"--load-balancer-id",
+					[]string{"Required. The ID of the LBaaS to get."},
+				},
+			},
+		},
+	})
+	registerCommandBase(nil, &lbaas.ListResp{}, commands.CommandExcInfo{
+		Verb:     "GET",
+		Url:      "https://api.loadbalancer.ctl.io/{accountAlias}/loadbalancers",
+		Resource: "lbaas",
+		Command:  "list",
+		Help: help.Command{
+			Brief: []string{"Get a list of all LBaaS instances for an account."},
 		},
 	})
 }
