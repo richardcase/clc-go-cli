@@ -3888,9 +3888,13 @@ func init() {
 					"--data-center",
 					[]string{"Required. Short string representing the data center you want the new load balancer in."},
 				},
-								{
+				{
 					"--load-balancer-id",
-					[]string{"Required. The ID of the LBaaS to get."},
+					[]string{"Required unless --load-balancer-name is specified. ID of the LBaaS to get."},
+				},
+				{
+					"--load-balancer-name",
+					[]string{"Required unless --load-balancer-id is specified. Name of the LBaaS ti get."},
 				},
 			},
 		},
@@ -3902,6 +3906,29 @@ func init() {
 		Command:  "list",
 		Help: help.Command{
 			Brief: []string{"Get a list of all LBaaS instances for an account."},
+		},
+	})
+	registerCommandBase(&lbaas.CreatePoolReq{}, &lbaas.LoadBalancerRequest{}, commands.CommandExcInfo{
+		Verb:     "POST",
+		Url:      "https://api.loadbalancer.clt.io/{accountAlias}/{DataCenter}/loadbalancers/{LoadBalancerId}/pools/",
+		Resource: "lbaas",
+		Command:  "create-pool",
+		Help: help.Command{
+			Brief: []string{"Create a new pool for a LBaaS framework."},
+			Arguments: []help.Argument{
+				{
+					"--data-center",
+					[]string{"Required. Short string representing the data center you want the new load balancer in."},
+				},
+				{
+					"--load-balancer-id",
+					[]string{"Required unless --load-balancer-name is specified. ID of the LBaaS to get."},
+				},
+				{
+					"--load-balancer-name",
+					[]string{"Required unless --load-balancer-id is specified. Name of the LBaaS ti get."},
+				},
+			},
 		},
 	})
 }

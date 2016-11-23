@@ -1,6 +1,6 @@
 package lbaas
 
 type GetReq struct {
-	DataCenter     string `json:"-" valid:"required" URIParam:"yes"`
-	LoadBalancerID string `json:"-" valid:"required" URIParam:"yes"`
+	LoadBalancerIdentifier `argument:"composed" URIParam:"LoadBalancerId" json:"-"`
+	DataCenter             string `json:"-" valid:"required" URIParam:"yes"`
 }
